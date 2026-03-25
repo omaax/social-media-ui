@@ -16,6 +16,7 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { IconBookmarkFilled } from "@tabler/icons-react"
+import React, { useContext } from "react"
 
 const posts:PostsType = [
   {
@@ -108,20 +109,20 @@ const Page = () => {
           {posts.map((post) => (
             <div key={post.id} className="rounded-xl px-5 pt-2 m-1 cursor-pointer">
               <Dialog>
-                  <DialogTrigger>
-                    <div className="flex flex-col items-start justify-start">
-                      <h1 className="text-2xl">{post.title}</h1>
-                      <p className="text-lg text-gray-600 text-start pb-2">{post.description}</p>
-                    </div>
-                      <div className="relative aspect-3/2">
-                        <Image 
-                          src={post.images[0]}
-                          alt="Post Image" 
-                          fill
-                          className="rounded-lg object-cover"
-                          />
-                        </div>
-                  </DialogTrigger>
+                <DialogTrigger>
+                  <div className="flex flex-col items-start justify-start">
+                    <h1 className="text-2xl">{post.title}</h1>
+                    <p className="text-lg text-gray-600 text-start pb-2">{post.description}</p>
+                  </div>
+                  <div className="relative aspect-3/2">
+                    <Image 
+                      src={post.images[0]}
+                      alt="Post Image" 
+                      fill
+                      className="rounded-lg object-cover"
+                    />
+                  </div>
+                </DialogTrigger>
                   <DialogContent>
                       <DialogHeader>
                       <DialogTitle>{post.title}</DialogTitle>

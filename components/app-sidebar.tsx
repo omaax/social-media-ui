@@ -51,7 +51,7 @@ const data: SidebarData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar {...props} className="">
+    <Sidebar {...props}>
       <NavHeader data={data} />
       <SidebarContent>
         <NavMain items={data.navMain} />
