@@ -1,7 +1,29 @@
 export type PostType = {
+    id: number;
     title: string;
     description: string;
     images: string[];
 }
 
 export type PostsType = PostType[]
+
+import type { ElementType } from "react";
+
+export interface NavItem {
+  id: string;
+  title: string;
+  icon: ElementType;
+  url?: string;
+  isActive?: boolean;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  avatar: string;
+}
+
+export interface SidebarData {
+  user: User;
+  navMain: NavItem[];
+}
