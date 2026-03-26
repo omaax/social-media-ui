@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
-import { UserContext } from "../app/Context"
 import { useContext, useState } from "react"
 
 export function LoginForm({

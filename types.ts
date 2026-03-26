@@ -27,3 +27,13 @@ export interface SidebarData {
   user: User;
   navMain: NavItem[];
 }
+
+export interface DialogData {
+  postDialogItem: PostDialogItem[]
+}
+
+export interface PostDialogItem {
+  id: string;
+  title: string;
+  className: string;
+}
