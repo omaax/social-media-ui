@@ -1,12 +1,7 @@
 "use client"
 
-import { PostsType } from "@/types"
+import { PostsType, PostType, PostContextType  } from "@/types"
 import { createContext, ReactNode, useState } from "react";
-
-type PostContextType = {
-    posts: PostsType
-    setPosts: React.Dispatch<React.SetStateAction<PostsType>>
-}
 
 export const PostsContext = createContext<PostContextType | null>(null)
 
@@ -15,10 +10,6 @@ type Props = {
 }
 
 const PostsProvider = ({children}: Props) => {
-    const deletePost = (id: number) => {
-    const updatedPosts = posts.filter((post) => post.id !== id)
-    setPosts(updatedPosts)
-  }
     const [posts, setPosts] = useState<PostsType>([
         {
             id:1,
@@ -90,9 +81,19 @@ const PostsProvider = ({children}: Props) => {
             images: ["https://images.unsplash.com/photo-1465101162946-4377e57745c3?q=80&w=1000&auto=format&fit=crop"]
         }
     ])
+
+    const deletePost = (id: number) => {
+        // setPosts((prev) => posts.filter((post) => post.id !== id))
+        const updatedPosts = posts.filter((post) => post.id !== id)
+    setPosts(updatedPosts)
+  }
+
+    const addPost = (post: PostType) => {
+        setPosts((prev) => [...prev, post])
+    }
     
     return (
-        <PostsContext.Provider value={{ posts, setPosts }}>
+        <PostsContext.Provider value={{ posts, setPosts, addPost, deletePost }}>
             {children}
         </PostsContext.Provider>
     )

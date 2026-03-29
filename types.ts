@@ -7,6 +7,14 @@ export type PostType = {
 
 export type PostsType = PostType[]
 
+export interface PostContextType {
+  posts: PostType[];
+  setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
+  addPost: (post: PostType) => void;
+  deletePost: (id: number) => void;
+}
+
+
 import type { ElementType } from "react";
 
 export interface NavItem {

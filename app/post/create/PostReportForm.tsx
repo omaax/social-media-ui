@@ -29,6 +29,7 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
+import { PostsContext } from "@/app/context/PostsContext"
 
 const formSchema = z.object({
   title: z
@@ -67,6 +68,27 @@ export function PostReportForm() {
     })
   }
 
+  const {posts, addPost} = React.useContext(PostsContext)!
+  const [title, setTitle] = React.useState("")
+  const [description, setDescription] = React.useState("")
+  const [postId, setPostId] = React.useState(null)
+
+  const handlePost = (e) => {
+    e.preventDefault()
+    if (!title && !description) return
+
+    const newPost = {
+      id: Date.now(),
+      title,
+      description,
+      images: []
+    }
+    addPost(newPost)
+
+    setTitle("")
+    setDescription("")
+  }
+
   return (
     <div className="flex items-center justify-center">
       <Card className="w-full sm:max-w-md">
@@ -90,6 +112,7 @@ export function PostReportForm() {
                       aria-invalid={fieldState.invalid}
                       placeholder="Title"
                       autoComplete="off"
+                      onChange={field.onChange}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -113,6 +136,7 @@ export function PostReportForm() {
                         rows={6}
                         className="min-h-24 resize-none"
                         aria-invalid={fieldState.invalid}
+                        onChange={field.onChange}
                       />
                       <InputGroupAddon align="block-end">
                         <InputGroupText className="tabular-nums">

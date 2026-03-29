@@ -19,7 +19,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
           return (
             <SidebarMenuItem key={item.id}>
               <Link href={item.url ?? "#"}>
-                <SidebarMenuButton>
+                <SidebarMenuButton size="xl">
                   {Icon && <Icon className="mr-2 h-4 w-4" />}
                   <span>{item.title}</span>
                 </SidebarMenuButton>

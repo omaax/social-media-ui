@@ -57,16 +57,17 @@ const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
                     <h1 className="text-2xl">{post.title}</h1>
                     <PostDialogMenu data={data} />
                 </div>
-                <DialogTrigger>
-                  <div className="flex flex-col items-start justify-start pl-2">
+                <DialogTrigger className="flex items-center justify-center flex-col">
+                  <div className="pl-2">
                     <p className="text-lg text-gray-600 text-start pb-2">{post.description}</p>
                   </div>
-                  <div className="relative object-cover aspect-3/2">
+                  <div className="">
                     <Image 
                       src={post.images[0]}
                       alt="Post Image" 
-                      fill
-                      className="rounded-lg object-cover"
+                      width={480}
+                      height={450}
+                      className="rounded-lg h-[450px]"
                     />
                   </div>
                 </DialogTrigger>
