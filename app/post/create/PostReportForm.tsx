@@ -68,12 +68,13 @@ export function PostReportForm() {
     })
   }
 
-  const {posts, addPost} = React.useContext(PostsContext)!
+  const {posts, addPost, editPost} = React.useContext(PostsContext)!
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [postId, setPostId] = React.useState(null)
+  const [isEdit, setIsEdit] = React.useState(false)
 
-  const handlePost = (e) => {
+  const handlePost = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
     if (!title && !description) return
 
@@ -88,6 +89,8 @@ export function PostReportForm() {
     setTitle("")
     setDescription("")
   }
+
+
 
   return (
     <div className="flex items-center justify-center">

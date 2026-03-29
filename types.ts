@@ -12,6 +12,7 @@ export interface PostContextType {
   setPosts: React.Dispatch<React.SetStateAction<PostType[]>>;
   addPost: (post: PostType) => void;
   deletePost: (id: number) => void;
+  editPost: (id:number, updatePost: Partial<PostType>) => void;
 }
 
 

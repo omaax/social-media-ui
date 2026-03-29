@@ -83,7 +83,6 @@ const PostsProvider = ({children}: Props) => {
     ])
 
     const deletePost = (id: number) => {
-        // setPosts((prev) => posts.filter((post) => post.id !== id))
         const updatedPosts = posts.filter((post) => post.id !== id)
     setPosts(updatedPosts)
   }
@@ -91,9 +90,20 @@ const PostsProvider = ({children}: Props) => {
     const addPost = (post: PostType) => {
         setPosts((prev) => [...prev, post])
     }
+
+    const editPost = (id:number, updatePost: Partial<PostType>) => {
+        setPosts(prevPosts => { 
+            return prevPosts.map(post => {
+                if (post.id === id){
+                    return {...post, ...updatePost}
+                }
+                return post
+            })
+        })
+    }
     
     return (
-        <PostsContext.Provider value={{ posts, setPosts, addPost, deletePost }}>
+        <PostsContext.Provider value={{ posts, setPosts, addPost, deletePost, editPost}}>
             {children}
         </PostsContext.Provider>
     )
