@@ -13,10 +13,13 @@ export interface PostContextType {
   addPost: (post: PostType) => void;
   deletePost: (id: number) => void;
   editPost: (id:number, updatePost: Partial<PostType>) => void;
+  user: User | null
+  login: (email: string, password: string) => boolean
+  logout: () => void
 }
 
 
-import type { ElementType } from "react";
+import { useState, type ElementType } from "react";
 
 export interface NavItem {
   id: string;
@@ -27,9 +30,9 @@ export interface NavItem {
 }
 
 export interface User {
-  name: string;
+  // name: string;
   email: string;
-  avatar: string;
+  // avatar: string;
 }
 
 export interface SidebarData {

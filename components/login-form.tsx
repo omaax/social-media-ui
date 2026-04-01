@@ -13,21 +13,42 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useContext, useState } from "react"
+import { PostsContext } from "@/context/PostsContext"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const router = useRouter()
+  const ctx = useContext(PostsContext)
+
+  if (!ctx) return null
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+
+    const success = ctx.login(email, password)
+    if (success) {
+      router.push("/post")
+    } else {
+    setError("Invalid email or password")
+  }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="p-0">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
                 <p className="text-balance text-muted-foreground">
                   Enter your email below to login to your account
+                  <br/> <span className="text-amber-900">user@user.com / user</span>
                 </p>
               </div>
               <Field>
@@ -36,8 +57,10 @@ export function LoginForm({
                   id="email"
                   type="email"
                   name="email"
+                  value={email}
                   placeholder="m@example.com"
                   required
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Field>
               <Field>
@@ -50,7 +73,8 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" value={password} required onChange={(e)=> setPassword(e.target.value)} />
+                <p className="text-red-600">{error}</p>
               </Field>
               <Field>
                 <Button type="submit">Login</Button>

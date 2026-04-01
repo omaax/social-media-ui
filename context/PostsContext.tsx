@@ -1,6 +1,6 @@
 "use client"
 
-import { PostsType, PostType, PostContextType  } from "@/types"
+import { PostsType, PostType, PostContextType, User  } from "@/types"
 import { createContext, ReactNode, useState } from "react";
 
 export const PostsContext = createContext<PostContextType | null>(null)
@@ -101,9 +101,23 @@ const PostsProvider = ({children}: Props) => {
             })
         })
     }
-    
+
+    const [user, setUser] = useState<User | null>(null)
+
+    const login = (email: string, password:string) => {
+    if (email === "user@user.com" && password === "user"){
+        setUser({email})
+        return true
+        }
+    return false
+    }
+
+    const logout = () => {
+        setUser(null)
+    }
+
     return (
-        <PostsContext.Provider value={{ posts, setPosts, addPost, deletePost, editPost}}>
+        <PostsContext.Provider value={{ posts, setPosts, addPost, deletePost, editPost, user, login, logout}}>
             {children}
         </PostsContext.Provider>
     )

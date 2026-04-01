@@ -29,7 +29,8 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from "@/components/ui/input-group"
-import { PostsContext } from "@/app/context/PostsContext"
+import { PostsContext } from "@/context/PostsContext"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   title: z
@@ -40,6 +41,7 @@ const formSchema = z.object({
     .string()
     .min(20, "Description must be at least 20 characters.")
     .max(200, "Description must be at most 200 characters."),
+    image: z.string().url("Must be a valid URL"),
 })
 
 export function PostReportForm() {
@@ -48,48 +50,26 @@ export function PostReportForm() {
     defaultValues: {
       title: "",
       description: "",
+      image: "",
     },
   })
+  
+  const router = useRouter()
+  const {addPost} = React.useContext(PostsContext)!
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    toast("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-      position: "bottom-right",
-      classNames: {
-        content: "flex flex-col gap-2",
-      },
-      style: {
-        "--border-radius": "calc(var(--radius)  + 4px)",
-      } as React.CSSProperties,
-    })
-  }
-
-  const {posts, addPost, editPost} = React.useContext(PostsContext)!
-  const [title, setTitle] = React.useState("")
-  const [description, setDescription] = React.useState("")
-  const [postId, setPostId] = React.useState(null)
-  const [isEdit, setIsEdit] = React.useState(false)
-
-  const handlePost = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    if (!title && !description) return
-
     const newPost = {
-      id: Date.now(),
-      title,
-      description,
-      images: []
-    }
-    addPost(newPost)
-
-    setTitle("")
-    setDescription("")
+    id: Date.now(),
+    title: data.title,
+    description: data.description,
+    images: [data.image],
   }
 
+    addPost(newPost)
+    form.reset()
+    toast("Post created successfully!")
+    router.push("/post")
+  }
 
 
   return (
@@ -153,16 +133,24 @@ export function PostReportForm() {
                   </Field>
                 )}
               />
-              <Field>
-                <FieldLabel htmlFor="input-badge">
-                  Image URL{" "}
-                </FieldLabel>
-                <Input
-                  id="input-badge"
-                  type="url"
-                  placeholder="https://images.unsplash.com/photo"
-                />
-            </Field>
+              <Controller
+                name="image"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="input-badge">Image URL</FieldLabel>
+                    <Input
+                      {...field}
+                      id="input-badge"
+                      type="url"
+                      placeholder="https://images.unsplash.com/photo"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
             </FieldGroup>
           </form>
         </CardContent>

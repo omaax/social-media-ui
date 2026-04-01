@@ -15,7 +15,7 @@ import Image from "next/image"
 import { Ellipsis, Heart, MessageCircle, Pencil, Share } from "lucide-react"
 import { IconBookmarkFilled } from "@tabler/icons-react"
 import React, { useContext } from "react"
-import PostsProvider, { PostsContext } from "../context/PostsContext"
+import PostsProvider, { PostsContext } from "../../context/PostsContext"
 import PostDialogMenu from "@/components/PostDialog"
 import { DialogData, PostType } from "@/types"
 import { Button } from "@/components/ui/button"
@@ -59,7 +59,7 @@ const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
   const router = useRouter()
 
   const EditAPost = (postId: number) => {
-    const post = posts.filter((post) => postId === postId)[0]
+    const post = posts.filter((post) => post.id === postId)[0]
     setTitle(post.title)
     setDescription(post.description)
     setImage(post.images[0] || "")
@@ -212,8 +212,6 @@ const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
 
 export default function PageWrapper() {
   return (
-    <PostsProvider>
       <Page />
-    </PostsProvider>
   );
 }
