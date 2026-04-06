@@ -13,6 +13,9 @@ export interface PostContextType {
   addPost: (post: PostType) => void;
   deletePost: (id: number) => void;
   editPost: (id:number, updatePost: Partial<PostType>) => void;
+}
+
+export interface UserContextType {
   user: User | null
   login: (email: string, password: string) => boolean
   logout: () => void

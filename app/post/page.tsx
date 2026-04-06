@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
+import SinglePost from "@/components/SinglePost"
 
 const data: DialogData = {
   postDialogItem: [
@@ -44,42 +45,7 @@ const data: DialogData = {
 }
 
 const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
-  const { posts, setPosts, editPost } = useContext(PostsContext)!
-
-  const deletePost = (id: number) => {
-    const updatedPosts = posts.filter((post) => post.id !== id)
-    setPosts(updatedPosts)
-  }
-
-  const [title, setTitle] = React.useState("")
-  const [image, setImage] = React.useState("")
-  const [description, setDescription] = React.useState("")
-  const [postId, setPostId] = React.useState<number | null>(null)
-
-  const router = useRouter()
-
-  const EditAPost = (postId: number) => {
-    const post = posts.filter((post) => post.id === postId)[0]
-    setTitle(post.title)
-    setDescription(post.description)
-    setImage(post.images[0] || "")
-    setPostId(postId)
-  }
-
-  const handleEditPost = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault()
-    if (!title && !description) return
-    if (postId === null) return
-    const updatedPost = {
-      id: postId,
-      title,
-      description,
-      images: [image]
-    }
-
-    editPost(updatedPost.id, updatedPost)
-    router.push("/post")
-  }
+  const { posts } = useContext(PostsContext)!
 
   return (
     <div className='mx-auto sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl'>
@@ -106,83 +72,7 @@ const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
                   />
                 </div>
               </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <div className="flex items-center justify-between">
-                    <DialogTitle>{post.title}</DialogTitle>
-                    <div className="flex items-center justify-center">
-                      <Button onClick={() => deletePost(post.id)} variant={null} className="text-red-600">Delete</Button>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button className="bg-transparent" onClick={() => EditAPost(post.id)}><Pencil color="#000000" /></Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
-                          <DialogHeader>
-                            <DialogTitle>Edit Post</DialogTitle>
-                          </DialogHeader>
-                          <div className="flex items-center gap-2">
-                            <div className="grid flex-1 gap-2">
-                              <input
-                                type="text"
-                                className=""
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                              />
-                              <textarea
-                                value={description}
-                                className=""
-                                onChange={(e) => setDescription(e.target.value)}
-                              ></textarea>
-                              <input
-                                type="text"
-                                className=""
-                                value={image}
-                                onChange={(e) => setImage(e.target.value)}
-                              />
-                              <Label htmlFor="link" className="sr-only">
-                                Link
-                              </Label>
-                            </div>
-                          </div>
-                          <DialogFooter className="sm:justify-start">
-                            <DialogClose asChild>
-                              <Button type="button">Close</Button>
-                            </DialogClose>
-                            <Button type="submit" form="form-rhf-demo" onClick={handleEditPost}>
-                              Submit
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
-                  </div>
-                  <DialogDescription>
-                    {post.description}
-                    <div className="relative aspect-3/2">
-                      <Image
-                        src={post.images[0]}
-                        alt="Post Image"
-                        fill
-                        className="rounded-lg object-cover"
-                      />
-                    </div>
-                    {/* INTERACTIONS */}
-                    <div className="flex items-center justify-start gap-2 pl-2 py-3">
-                      <div className="flex gap-2">
-                        <Heart className="hover:scale-110 transition-all duration-300 cursor-pointer" />
-                        <h2>5</h2>
-                      </div>
-                      <div className="flex gap-2">
-                        <MessageCircle className="hover:scale-110 transition-all duration-300 cursor-pointer" />
-                        <h2>2</h2>
-                      </div>
-                      <div className="flex gap-2">
-                        <Share className="hover:scale-110 transition-all duration-300 cursor-pointer" />
-                      </div>
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
+              <SinglePost post={post} />
             </Dialog>
 
             {/* INTERACTIONS */}
@@ -212,6 +102,6 @@ const Page = ({ ...props }: React.ComponentProps<typeof Dialog>) => {
 
 export default function PageWrapper() {
   return (
-      <Page />
+    <Page />
   );
 }

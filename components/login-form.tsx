@@ -1,11 +1,17 @@
 "use client"
 
+import * as React from "react"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import * as z from "zod"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -13,69 +19,106 @@ import {
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import { useContext, useState } from "react"
-import { PostsContext } from "@/context/PostsContext"
+import { UsersContext } from "@/context/UsersContext"
+import { InputGroup } from "./ui/input-group"
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .email(),
+  password: z
+    .string(),
+})
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const router = useRouter()
-  const ctx = useContext(PostsContext)
+  const ctx = useContext(UsersContext)
 
   if (!ctx) return null
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault()
-
-    const success = ctx.login(email, password)
+  const onSubmit = (data: z.infer<typeof formSchema>): void => {
+    const success = ctx.login(data.email, data.password)
     if (success) {
       router.push("/post")
     } else {
-    setError("Invalid email or password")
-  }
+      setError("Invalid email or password")
+    }
   }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="p-0">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+          <form className="p-6 md:p-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
                 <p className="text-balance text-muted-foreground">
                   Enter your email below to login to your account
-                  <br/> <span className="text-amber-900">user@user.com / user</span>
+                  <br /> <span className="text-amber-900">user@user.com / user</span>
                 </p>
               </div>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={email}
-                  placeholder="m@example.com"
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" value={password} required onChange={(e)=> setPassword(e.target.value)} />
-                <p className="text-red-600">{error}</p>
-              </Field>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-title">
+                      Email
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="email"
+                      type="email"
+                      name="email"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Email"
+                      autoComplete="off"
+                      onChange={field.onChange}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-description">
+                      Password
+                    </FieldLabel>
+                    <InputGroup>
+                      <Input
+                        {...field}
+                        id="form-rhf-demo-description"
+                        placeholder="Description."
+                        type="password"
+                        className=""
+                        aria-invalid={fieldState.invalid}
+                        onChange={field.onChange}
+                      />
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                    <p className="text-red-600">{error}</p>
+                  </Field>
+                )}
+              />
               <Field>
                 <Button type="submit">Login</Button>
               </Field>

@@ -41,7 +41,7 @@ const formSchema = z.object({
     .string()
     .min(20, "Description must be at least 20 characters.")
     .max(200, "Description must be at most 200 characters."),
-    image: z.string().url("Must be a valid URL"),
+  image: z.string().url("Must be a valid URL"),
 })
 
 export function PostReportForm() {
@@ -53,17 +53,17 @@ export function PostReportForm() {
       image: "",
     },
   })
-  
+
   const router = useRouter()
-  const {addPost} = React.useContext(PostsContext)!
+  const { addPost } = React.useContext(PostsContext)!
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     const newPost = {
-    id: Date.now(),
-    title: data.title,
-    description: data.description,
-    images: [data.image],
-  }
+      id: Date.now(),
+      title: data.title,
+      description: data.description,
+      images: [data.image],
+    }
 
     addPost(newPost)
     form.reset()
